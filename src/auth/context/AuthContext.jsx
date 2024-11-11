@@ -42,11 +42,20 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await auth.logout();
-      setIsAuthenticated(false);
-      setUser(null);
+      setIsLoading(true);
+      setError(null);
+      const success = await auth.logout();
+      
+      if (success) {
+        setIsAuthenticated(false);
+        setUser(null);
+        // Use window.location.href for a full page refresh after logout
+        window.location.href = '/';
+      }
     } catch (err) {
       setError(err.message);
+      // If there's an error, we'll show it but won't redirect
+      setIsLoading(false);
     }
   };
 

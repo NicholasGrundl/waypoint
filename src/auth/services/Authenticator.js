@@ -33,17 +33,29 @@ class AuthError extends Error {
   
     async logout() {
       try {
-        localStorage.removeItem('user');
-        const response = await fetch('/auth/logout');
+        // First try to contact the server
+        const response = await fetch('/auth/logout', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        
         if (!response.ok) {
-          throw new AuthError('Logout failed', response.status);
+          throw new AuthError('Server logout failed', response.status);
         }
-        console.log('User has been logged out.');
-        window.location.replace(this.rootPath);
+        
+        // Only clear local storage after successful server logout
+        localStorage.removeItem('user');
+        return true;
       } catch (error) {
         console.error('Logout error:', error);
-        // Still redirect to root path even if logout fails
-        window.location.replace(this.rootPath);
+        // If it's a network error, we should still clear local state
+        if (!window.navigator.onLine) {
+          localStorage.removeItem('user');
+          return true;
+        }
+        throw error;
       }
     }
   
