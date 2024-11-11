@@ -1,35 +1,14 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import { BrowserRouter } from 'react-router-dom';
+import { AuthProvider } from './auth/context/AuthContext';
+import HomePage from './pages/HomePage';
 
 function App() {
-  const [username, setUsername] = useState('');
-  const [greeting, setGreeting] = useState('');
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.get(`/api/${username}`);
-      setGreeting(response.data.message);
-    } catch (error) {
-      console.error('Error fetching greeting:', error);
-      setGreeting('Error fetching greeting');
-    }
-  };
-
   return (
-    <div className="App">
-      <h1>Hello World</h1>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          placeholder="Enter your name"
-        />
-        <button type="submit">Submit</button>
-      </form>
-      {greeting && <p>{greeting}</p>}
-    </div>
+    <BrowserRouter>
+      <AuthProvider>
+        <HomePage />
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
 
