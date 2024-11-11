@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
+import { AuthProvider } from './auth/context/AuthContext';
+import { BrowserRouter } from 'react-router-dom';
+
 function App() {
   const [username, setUsername] = useState('');
   const [greeting, setGreeting] = useState('');
