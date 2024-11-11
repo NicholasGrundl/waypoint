@@ -62,3 +62,36 @@ publish.tag:
 .PHONY: dev
 dev:
 	npm start  # Uses CRA's development server
+
+
+#### Context ####
+.PHONY: context
+context: context.clean context.src context.public context.settings
+
+.PHONY: context.src
+context.src:
+	repo2txt -r ./src/ -o ./context/context-src.txt \
+	&& python -c 'import sys; open("context/context-src.md","wb").write(open("context/context-src.txt","rb").read().replace(b"\0",b""))' \
+	&& rm ./context/context-src.txt
+
+.PHONY: context.settings
+context.settings:
+	repo2txt -r . -o ./context/context-settings.txt \
+	--exclude-dir src public node_modules \
+	--ignore-types .md \
+	--ignore-files LICENSE package-lock.json README.md \
+	&& python -c 'import sys; open("context/context-settings.md","wb").write(open("context/context-settings.txt","rb").read().replace(b"\0",b""))' \
+	&& rm ./context/context-settings.txt
+
+	
+.PHONY: context.public
+context.public:
+	repo2txt -r ./public -o ./context/context-public.txt --ignore-types .png .ico .svg \
+	--ignore-files favicon.ico \
+	&& python -c 'import sys; open("context/context-public.md","wb").write(open("context/context-public.txt","rb").read().replace(b"\0",b""))' && \
+	rm ./context/context-public.txt
+
+
+.PHONY: context.clean
+context.clean:
+	rm ./context/context-*
