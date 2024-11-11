@@ -1,26 +1,43 @@
-# Use an official Node runtime as the base image
-FROM node:14
+# Build stage
+FROM node:20-slim AS builder
 
-# Set the working directory in the container
+# Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json
+# Copy package files
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm ci
 
-# Copy the rest of the frontend code
+# Copy source code
 COPY . .
 
-# Build the app for production
+# Build the application
 RUN npm run build
 
-# Install serve to run the application
+# Production stage
+FROM node:20-slim AS production
+
+# Set working directory
+WORKDIR /app
+
+# Create a non-root user
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs && \
+    chown -R nextjs:nodejs /app
+
+# Install serve globally
 RUN npm install -g serve
 
-# Expose the port the app runs on
+# Copy built assets from builder
+COPY --from=builder --chown=nextjs:nodejs /app/build ./build
+
+# Switch to non-root user
+USER nextjs
+
+# Expose port
 EXPOSE 3000
 
-# Serve the app
+# Start the application
 CMD ["serve", "-s", "build", "-l", "3000"]
