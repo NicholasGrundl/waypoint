@@ -2,6 +2,7 @@
 import { useAuth } from '../auth/hooks/useAuth';
 import Navbar from '../components/Navbar';
 import PublicView from '../components/public/PublicView';
+import PrivateView from '../components/private/PrivateView';
 
 const HomePage = () => {
   const { isAuthenticated, isLoading } = useAuth();
@@ -17,11 +18,7 @@ const HomePage = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      {isAuthenticated ? (
-        <div>Private view will go here</div>
-      ) : (
-        <PublicView />
-      )}
+      {isAuthenticated ? <PrivateView /> : <PublicView />}
     </div>
   );
 };
