@@ -59,9 +59,30 @@ publish.tag:
 	@echo "---Pushed tag as version=$(VERSION)"
 
 #### Development ####
+.PHONY: dev.help
+dev.help:
+	@echo "Development commands:"
+	@echo "  make dev          - Start development server"
+	@echo "  make dev.mock     - Start development server with mock auth"
+	@echo "  make dev.clean    - Clean development artifacts"
+	@echo "  make dev.init     - Initialize mock service worker"
+
 .PHONY: dev
 dev:
 	npm start  # Uses CRA's development server
+
+.PHONY: dev.moc
+dev.mock:
+	REACT_APP_USE_MOCK_AUTH=true npm start
+
+.PHONY: dev.clean
+dev.clean:
+	rm -f public/mockServiceWorker.js
+	rm -rf coverage/
+	
+.PHONY: dev.init
+dev.init:
+	npx msw init public/
 
 
 #### Context ####
