@@ -13,8 +13,22 @@ class AuthError extends Error {
       this.loginPath = '/auth/login';
     }
   
-    login() {
-      window.location.href = this.loginPath;
+    async login() {
+      try {
+        const response = await fetch(this.loginPath);
+        if (!response.ok) {
+          throw new AuthError('Login failed', response.status);
+        }
+        
+        const userData = await response.json();
+        localStorage.setItem('user', JSON.stringify(userData));
+        
+        // Redirect to homepage after successful login
+        window.location.replace(this.rootPath);
+      } catch (error) {
+        console.error('Login error:', error);
+        throw error;
+      }
     }
   
     async logout() {

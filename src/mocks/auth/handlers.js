@@ -3,21 +3,23 @@ import { http, HttpResponse } from 'msw';
 import { mockAuth } from './mockAuthService';
 import { mockUsers } from './mockUsers';
 
-
 export const handlers = [
-  // Login endpoint
-  http.post('/auth/login', async () => {
+  // Login endpoint - simulate SSO flow
+  http.get('/auth/login', async () => {
     // In dev, always login as first test user
     const user = mockUsers[0];
     mockAuth.setCurrentUser(user);
     
-    return HttpResponse.json(user);
+    // Return success with user data
+    return HttpResponse.json(user, {
+      status: 200
+    });
   }),
 
   // Logout endpoint
   http.post('/auth/logout', () => {
     mockAuth.resetAuth();
-    return new HttpResponse(null, { status: 200 });
+    return new HttpResponse("Mocked: Logged out users", { status: 200 });
   }),
 
   // Get current user endpoint
@@ -25,7 +27,7 @@ export const handlers = [
     const user = mockAuth.getCurrentUser();
     
     if (!user) {
-      return new HttpResponse(null, { status: 401 });
+      return new HttpResponse("Mocked: No User logged in", { status: 401 });
     }
     
     return HttpResponse.json(user);
