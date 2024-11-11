@@ -1,4 +1,6 @@
 // src/mocks/auth/mockAuthService.js
+import { mockUsers } from './mockUsers';
+
 class MockAuthService {
     constructor() {
       this.currentUser = null;

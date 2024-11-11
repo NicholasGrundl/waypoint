@@ -71,7 +71,7 @@ dev.help:
 dev:
 	npm start  # Uses CRA's development server
 
-.PHONY: dev.moc
+.PHONY: dev.mock
 dev.mock:
 	REACT_APP_USE_MOCK_AUTH=true npm start
 

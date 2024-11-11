@@ -1,5 +1,6 @@
 // src/mocks/test-utils.js
-import { mockAuth, mockUsers } from './auth/mockAuthService';
+import { mockAuth } from './auth/mockAuthService';
+import { mockUsers } from './auth/mockUsers';
 
 export const mockAuthUtils = {
   // Login as a specific user
@@ -28,7 +29,13 @@ export const mockAuthUtils = {
   // Get current auth state
   getCurrentUser: () => {
     return mockAuth.getCurrentUser();
+  },
+
+  // Get all mock users (useful for testing)
+  getAllUsers: () => {
+    return [...mockUsers];
   }
+
 };
 
 // Example test usage:

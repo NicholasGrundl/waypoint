@@ -1,6 +1,8 @@
 // src/mocks/auth/handlers.js
 import { http, HttpResponse } from 'msw';
-import { mockUsers, mockAuth } from './mockAuthService';
+import { mockAuth } from './mockAuthService';
+import { mockUsers } from './mockUsers';
+
 
 export const handlers = [
   // Login endpoint
