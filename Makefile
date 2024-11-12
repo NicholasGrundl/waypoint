@@ -43,9 +43,9 @@ lint:
 format:
 	npx prettier --write $(FORMAT_DIRS)
 
-#### Build/Push ####
+#### Build/Publish ####
 # --- Env vars
--include .env.config
+-include .env.publish
 ARTIFACT_REGISTRY_HOST ?= $(or $(ARTIFACT_REGISTRY_HOST),us-west1-docker.pkg.dev/)
 DOCKER_IMAGE ?= $(or $(DOCKER_IMAGE),waypoint)
 
@@ -73,22 +73,25 @@ docker.help:
 	@echo "Docker commands:"
 	@echo "  make docker.build      - Build Docker image and tag for production"
 	@echo "  make docker.build.dev  - Build Docker image for local development"
-	@echo "  make docker.push       - Push to Google Artifact Repository
+	@echo "  make docker.push       - Push to Google Artifact Repository"
 
 .PHONY: docker.build
-docker.build: publish.tag
+docker.build:
 	docker build -t $(DOCKER_IMAGE):$(DOCKER_TAG) .
+	docker tag $(DOCKER_IMAGE):$(DOCKER_TAG) $(DOCKER_IMAGE):latest
 	docker tag $(DOCKER_IMAGE):$(DOCKER_TAG) $(ARTIFACT_REGISTRY_HOST)/$(DOCKER_IMAGE):$(DOCKER_TAG)
 	docker tag $(DOCKER_IMAGE):$(DOCKER_TAG) $(ARTIFACT_REGISTRY_HOST)/$(DOCKER_IMAGE):latest
 
 .PHONY: docker.build.dev
-docker.build.local:
+docker.build.dev:
 	docker build --target builder -t $(DOCKER_IMAGE):local .
+	docker tag $(DOCKER_IMAGE):local $(DOCKER_IMAGE):latest
 
 .PHONY: docker.push
 docker.push:
-	@echo "Pushing frontend image to GAR..."
+	@echo "Pushing waypoint image to GAR..."
 	docker push ${ARTIFACT_REGISTRY_HOST}/${DOCKER_IMAGE}:$(DOCKER_TAG)
+	docker push ${ARTIFACT_REGISTRY_HOST}/${DOCKER_IMAGE}:latest
 	@echo "Push completed successfully"
 
 #### Development ####
