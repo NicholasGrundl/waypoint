@@ -16,13 +16,14 @@ const Navbar = () => {
             </Link>
           </div>
 
-          {/* Right side - Auth Button */}
+          {/* Right side - Links and Auth Button */}
           <div className="flex items-center">
-            {error && (
-              <span className="text-red-600 mr-4 text-sm">
-                {error}
-              </span>
-            )}
+            <Link to="/" className="text-gray-800 mr-4">
+              Home
+            </Link>
+            <Link to="/about" className="text-gray-800 mr-4">
+              About
+            </Link>
             
             {isAuthenticated ? (
               <button
