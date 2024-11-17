@@ -173,7 +173,6 @@ prod.release: publish.info
 		exit 1; \
 	fi
 	@echo "Tagging production commit for github..."
-	@make publish.setup
 	@make publish.tag
 	@echo "Tagging production image for registry..."
 	@make docker.push
