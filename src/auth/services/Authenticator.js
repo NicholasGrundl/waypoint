@@ -10,7 +10,7 @@ class AuthError extends Error {
   class Authenticator {
     constructor(rootPath) {
       this.rootPath = rootPath;
-      this.loginPath = '/auth/login';
+      this.loginPath = '/auth/login/google';
     }
   
     async login() {
